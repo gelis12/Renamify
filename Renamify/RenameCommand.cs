@@ -13,8 +13,17 @@ namespace Renamify
         private const string FromArg = "-f";
         private const string ToArg = "-t";
 
+        private Dictionary<string, string> _allowedArguments = new Dictionary<string, string>() 
+        {
+            { PathArg, "Full path of the folder to be used"},
+            { FromArg, "Text to rename from"},
+            { ToArg, "Text to rename to" }
+        };
+
         public List<string> Errors { get; } = new List<string>();
         public bool HasErrors => Errors.Count > 0;
+
+
 
         public void Apply(string[] arg) 
         {
@@ -51,6 +60,15 @@ namespace Renamify
                     continue;
                 }
                 Console.WriteLine($"Renamed file [{currentFileName}] to [{newFileName}]");
+            }
+        }
+        public void Describe() 
+        {
+            Console.WriteLine("Rename: use -rename to rename all files inside a specified folder");
+            Console.WriteLine("Allowed arguments");
+            foreach(var arg in _allowedArguments)
+            {
+                Console.WriteLine($"{arg.Key} : {arg.Value}");
             }
         }
 

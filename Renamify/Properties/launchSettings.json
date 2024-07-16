@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Renamify": {
+      "commandName": "Project",
+      "commandLineArgs": "-h"
+    }
+  }
+}
