@@ -2,8 +2,10 @@
 
 const string HelpCommand = "-h";
 const string RenameCommand = "-rename";
+const string TrimCommand = "-trim";
 
 var renameCommand = new RenameCommand();
+var trimCommand  = new TrimCommand();
 
 var arg = args;
 
@@ -18,20 +20,25 @@ if (arg.Contains(HelpCommand))
 }
 else
 {
+    var commandArgs = GetCommandArguments();
     switch (arg[0])
     {
         case RenameCommand:
-            var commandArgs = GetCommandArguments();
             renameCommand.Apply(commandArgs);
             if (renameCommand.HasErrors)
             {
-                DisplayRenameErrors();
+                DisplayErrors();
             }
             break;
-
+        case TrimCommand:
+            trimCommand.Apply(commandArgs);
+            if (trimCommand.HasErrors)
+            {
+                DisplayErrors();
+            }
+            break;
         default:
             Console.WriteLine("Invalid command");
-            
             break;
     }
 }
@@ -42,11 +49,16 @@ void DisiplayAvailableCommands()
     Console.WriteLine("Renamify supports following commands:");
     Console.WriteLine("--------------------------------------");
     renameCommand.Describe();
+    trimCommand.Describe();
 }
 
-void DisplayRenameErrors()
+void DisplayErrors()
 {
     foreach (var error in renameCommand.Errors)
+    {
+        Console.WriteLine(error);
+    }
+    foreach (var error in trimCommand.Errors)
     {
         Console.WriteLine(error);
     }

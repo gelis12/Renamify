@@ -7,8 +7,8 @@
         private int _trimEnd;
 
         private const string PathArg = "-p";
-        private const string TrimStartArg = "-trim--start";
-        private const string TrimEndArg = "-trim--end";
+        private const string TrimStartArg = "--trim-start";
+        private const string TrimEndArg = "--trim-end";
         private const int InvalidTrimValue = -1;
 
         private Dictionary<string, string> _allowedArguments = new Dictionary<string, string>()

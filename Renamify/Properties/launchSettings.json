@@ -2,7 +2,7 @@
   "profiles": {
     "Renamify": {
       "commandName": "Project",
-      "commandLineArgs": "-h"
+      "commandLineArgs": "-trim -p \"C:\\Users\\eelis\\OneDrive\\Desktop\\testfile\" --trim-start 4"
     }
   }
 }
