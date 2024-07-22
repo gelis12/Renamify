@@ -1,6 +1,6 @@
 ﻿namespace Renamify
 {
-    public class TrimCommand
+    public class TrimCommand : BaseCommand
     {
         private string _path;
         private int _trimStart;
@@ -11,17 +11,14 @@
         private const string TrimEndArg = "--trim-end";
         private const int InvalidTrimValue = -1;
 
-        private Dictionary<string, string> _allowedArguments = new Dictionary<string, string>()
+        public override Dictionary<string, string> AllowedArguments { get; } = new Dictionary<string, string>()
         {
             { PathArg, "Full path of the folder to be used"},
             { TrimStartArg, "Specify a number of chars to be trimmed from the start of the file name"},
             { TrimEndArg, "Specify a number of chars to be trimmed from the end of the file name" }
         };
 
-        public List<string> Errors { get; } = new List<string>();
-        public bool HasErrors => Errors.Count > 0;
-
-        public void Apply(string[] arg)
+        public override void Apply(string[] arg)
         {
             Build(arg);
 
@@ -55,14 +52,10 @@
             }
         }
 
-        public void Describe()
+        public override void Describe()
         {
             Console.WriteLine("Trim: use -trim to trim a specified number of chars at the start and/or end of the file name");
-            Console.WriteLine("Allowed arguments");
-            foreach (var arg in _allowedArguments)
-            {
-                Console.WriteLine($"{arg.Key} : {arg.Value}");
-            }
+            DescribeArguments();
         }
 
         private void Build(string[] arg)
@@ -88,33 +81,6 @@
                 }
             }
 
-        }
-
-        private Dictionary<string, string> PairArgumentsWithValues(string[] arg)
-        {
-            var argumentsPairs = new Dictionary<string, string>();
-
-            if (IsOddNumber(arg.Length))
-            {
-                Errors.Add("Invalid list of arguments");
-                return argumentsPairs;
-            }
-
-            for (int i = 0; i < arg.Length; i++)
-            {
-                var isLastArgument = i == arg.Length - 1;
-                if (!isLastArgument)
-                {
-                    argumentsPairs.Add(arg[i], arg[i + 1]);
-                }
-                i++;
-            }
-            return argumentsPairs;
-        }
-
-        private static bool IsOddNumber(int number)
-        {
-            return number % 2 != 0;
         }
 
         private bool ArgumentsAreValid()

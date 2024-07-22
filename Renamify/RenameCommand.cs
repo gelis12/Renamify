@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace Renamify
 {
-    public class RenameCommand
+    public class RenameCommand : BaseCommand
     {
         private string _path;
         private string _renameFrom;
@@ -13,19 +13,14 @@ namespace Renamify
         private const string FromArg = "-f";
         private const string ToArg = "-t";
 
-        private Dictionary<string, string> _allowedArguments = new Dictionary<string, string>() 
+        public override Dictionary<string, string> AllowedArguments { get; } = new Dictionary<string, string>() 
         {
             { PathArg, "Full path of the folder to be used"},
             { FromArg, "Text to rename from"},
             { ToArg, "Text to rename to" }
         };
 
-        public List<string> Errors { get; } = new List<string>();
-        public bool HasErrors => Errors.Count > 0;
-
-
-
-        public void Apply(string[] arg) 
+        public override void Apply(string[] arg) 
         {
             Build(arg);
 
@@ -62,14 +57,10 @@ namespace Renamify
                 Console.WriteLine($"Renamed file [{currentFileName}] to [{newFileName}]");
             }
         }
-        public void Describe() 
+        public override void Describe() 
         {
             Console.WriteLine("Rename: use -rename to rename all files inside a specified folder");
-            Console.WriteLine("Allowed arguments");
-            foreach(var arg in _allowedArguments)
-            {
-                Console.WriteLine($"{arg.Key} : {arg.Value}");
-            }
+            DescribeArguments();
         }
 
         private void Build(string[] arg)
@@ -97,33 +88,6 @@ namespace Renamify
 
         }
 
-        private Dictionary<string, string> PairArgumentsWithValues(string[] arg)
-        {
-            var argumentsPairs = new Dictionary<string, string>();
-            
-            if (IsOddNumber(arg.Length))
-            {
-                Errors.Add("Invalid list of arguments");
-                return argumentsPairs;
-            }
-
-            for (int i = 0; i < arg.Length; i++) 
-            {
-                var isLastArgument = i == arg.Length - 1;
-                if(!isLastArgument)
-                {
-                    argumentsPairs.Add(arg[i], arg[i + 1]);
-                }
-                i++; 
-            }
-            return argumentsPairs;
-        }
-
-
-        private static bool IsOddNumber(int number)
-        {
-            return number % 2 != 0;
-        }
 
         private bool ArgumentsAreValid()
         {

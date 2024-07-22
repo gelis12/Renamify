@@ -4,10 +4,18 @@ const string HelpCommand = "-h";
 const string RenameCommand = "-rename";
 const string TrimCommand = "-trim";
 
+var arg = args;
+
 var renameCommand = new RenameCommand();
 var trimCommand  = new TrimCommand();
 
-var arg = args;
+var commands = new List<BaseCommand>() 
+{
+    renameCommand,
+    trimCommand
+};
+
+
 
 if (arg.Length == 0)
 {
@@ -20,26 +28,27 @@ if (arg.Contains(HelpCommand))
 }
 else
 {
-    var commandArgs = GetCommandArguments();
     switch (arg[0])
     {
         case RenameCommand:
-            renameCommand.Apply(commandArgs);
-            if (renameCommand.HasErrors)
-            {
-                DisplayErrors();
-            }
+            Execute(renameCommand);
             break;
         case TrimCommand:
-            trimCommand.Apply(commandArgs);
-            if (trimCommand.HasErrors)
-            {
-                DisplayErrors();
-            }
+            Execute(trimCommand);
             break;
         default:
             Console.WriteLine("Invalid command");
             break;
+    }
+}
+
+void Execute(BaseCommand command)
+{
+    var commandArgs = GetCommandArguments();
+    command.Apply(commandArgs);
+    if (renameCommand.HasErrors)
+    {
+        DisplayErrors(command);
     }
 }
 
@@ -48,20 +57,19 @@ void DisiplayAvailableCommands()
     Console.WriteLine("Renamify - command line interface for handling file groups");
     Console.WriteLine("Renamify supports following commands:");
     Console.WriteLine("--------------------------------------");
-    renameCommand.Describe();
-    trimCommand.Describe();
+    foreach (var command in commands)
+    {
+        command.Describe();
+    }
 }
 
-void DisplayErrors()
+void DisplayErrors(BaseCommand command)
 {
-    foreach (var error in renameCommand.Errors)
+    foreach (var error in command.Errors)
     {
         Console.WriteLine(error);
     }
-    foreach (var error in trimCommand.Errors)
-    {
-        Console.WriteLine(error);
-    }
+    
 }
 
 string[] GetCommandArguments()
